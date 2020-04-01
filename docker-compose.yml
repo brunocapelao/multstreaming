@@ -1,0 +1,21 @@
+version: '3'
+services:
+    nginx-rtmp:
+        image: jasonrivers/nginx-rtmp
+        ports:
+            - "8080:8080"
+            - "1935:1935"
+        links:
+          - stunnel:stunnel
+        environment:
+          - RTMP_PUSH_URLS=${STREAMURLS}
+    stunnel:
+        image: dweomer/stunnel
+        ports:
+            - "19350:19350"
+        environment:
+            - STUNNEL_CLIENT=yes
+            - STUNNEL_VERIFY_CHAIN=no
+            - STUNNEL_SERVICE=ldaps
+            - STUNNEL_ACCEPT=stunnel:19350
+            - STUNNEL_CONNECT=live-api-s.facebook.com:443
